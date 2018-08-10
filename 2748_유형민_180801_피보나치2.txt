@@ -1,0 +1,35 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 피보나치 2
+//번호 : 2748
+//수정일 : 2018. 8. 1
+//언어 : Java
+
+public class Main {
+	static int N;
+	static BigInteger value[];
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+
+		value = new BigInteger[N+1];
+		value[0] = BigInteger.ZERO;
+		value[1] = BigInteger.ONE;	
+
+		for (int i = 2; i <= N; i++) {
+			value[i] = fibonacci(i);
+		}
+		System.out.println(value[N]);
+	}
+
+	private static BigInteger fibonacci(int n) {
+		return value[n - 1].add(value[n - 2]);
+	}
+}
