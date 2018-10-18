@@ -1,0 +1,72 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 퇴사
+//번호 : 14501번
+//수정일 : 2018. 9. 7
+//언어 : Java
+
+public class Main {
+	static int N;
+	static ArrayList<Pair> work;
+	static int tm;
+	static int MAX;
+
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		work = new ArrayList<>();
+
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			int day = Integer.parseInt(st.nextToken());
+			int money = Integer.parseInt(st.nextToken());
+
+			work.add(new Pair(day, money));
+		}
+
+		for (int i = 0; i < N; i++) {
+			// 상담 기간이 N보다 클경우
+			if (i + work.get(i).day > N)
+				continue;
+
+			dfs(i + work.get(i).day, work.get(i).money);
+		}
+
+		System.out.println(MAX);
+	}
+
+	private static void dfs(int index, int totalMoney) {
+		//최댓값
+		if (MAX < totalMoney)
+			MAX = totalMoney;
+
+		for (int i = index; i < N; i++) {
+			int tempIdx = i + work.get(i).day;
+			int tempMoney = totalMoney + work.get(i).money;
+
+			//범위가 넘을 경우
+			if (tempIdx > N)
+				continue;
+
+			dfs(tempIdx, tempMoney);
+		}
+	}
+}
+
+class Pair {
+	int day;
+	int money;
+
+	public Pair(int day, int money) {
+		this.day = day;
+		this.money = money;
+	}
+}

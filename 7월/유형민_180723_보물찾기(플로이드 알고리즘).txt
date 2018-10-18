@@ -1,0 +1,69 @@
+import java.util.Scanner;
+
+//작성자 : 유형민
+//제목 :	보물찾기
+//수정일 : 2018. 7. 23
+//언어 : Java
+
+public class Main {
+	static int result[];
+	static int map[][]; // 맵
+	static boolean visited[][]; // 방문 변수
+	static int value[][];
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int testCase; // 테스트 케이스
+		int N, M, K; // 유적의 수, 단서의 수, 남은시간
+
+		testCase = sc.nextInt();
+		result = new int[testCase];
+
+		for (int i = 0; i < testCase; i++) {
+			N = sc.nextInt();
+			M = sc.nextInt();
+			K = sc.nextInt();
+
+			map = new int[N + 1][N + 1];
+			visited = new boolean[N + 1][N + 1];
+			value = new int[N + 1][N + 1];
+			init(N);
+
+			for (int j = 0; j < M; j++) {
+				int x = sc.nextInt();
+				int y = sc.nextInt();
+
+				map[x][y] = 1;
+			}
+
+			solve(N);
+			
+			if(map[1][N] > K) result[i] = -1;
+			else result[i] = map[1][N];
+		}
+		
+		for(int i=0;i<result.length;i++)
+			System.out.println("#"+(i+1)+" "+result[i]);
+	}
+
+	private static void solve(int N) {
+		for (int j = 1; j <= N; j++) {
+			for (int k = 1; k <= N; k++) {
+				for (int z = 1; z <= N; z++)
+					if (map[k][z] > map[k][j] + map[j][z]) {
+						map[k][z] = map[k][j] + map[j][z];
+					}
+			}
+		}
+	}
+
+	private static void init(int N) {
+		for (int i = 0; i < N + 1; i++) {
+			for (int j = 0; j < N + 1; j++) {
+				visited[i][j] = false;
+				map[i][j] = 0;
+				value[i][j] = 0;
+			}
+		}
+	}
+}

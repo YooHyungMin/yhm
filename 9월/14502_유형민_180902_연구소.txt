@@ -1,0 +1,138 @@
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 연구소
+//번호 : 14502
+//수정일 : 2018. 8. 31
+//언어 : Java
+
+public class Main {
+	static int N, M;
+	static int map[][];
+	static boolean visited[][];
+	static int virus;
+	static int MAX;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+
+		map = new int[N][M];
+		visited = new boolean[N][M];
+
+		MAX = N * M + 1;
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				map[i][j] = Integer.parseInt(st.nextToken());
+				visited[i][j] = false;
+			}
+		}
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				if (map[i][j] != 0)
+					continue;
+
+				map[i][j] = 1;
+				dfs(i, j, 1);
+				map[i][j] = 0;
+			}
+		}
+		System.out.println(N * M - MAX);
+	}
+	
+	//감염 퍼트리기
+	private static void bfs(int x, int y) {
+		Queue<Point> q = new LinkedList<>();
+		q.add(new Point(x, y));
+
+		while (!q.isEmpty()) {
+			Point p = q.poll();
+			int dx[] = { 0, 0, -1, 1 };
+			int dy[] = { 1, -1, 0, 0 };
+
+			for (int i = 0; i < 4; i++) {
+				int tempX = p.x + dx[i];
+				int tempY = p.y + dy[i];
+
+				if (!isRange(tempX, tempY))
+					continue;
+
+				if (!visited[tempX][tempY] && map[tempX][tempY] == 0) {
+					visited[tempX][tempY] = true;
+					virus++;
+					q.add(new Point(tempX, tempY));
+				}
+			}
+		}
+	}
+
+	// 모든 경로 탐색하면서 감염이 가장 적게되는 벽의 위치 찾는 함수
+	private static void dfs(int x, int y, int count) {
+		if (count == 3) {
+			for (int i = 0; i < N; i++) {
+				for (int j = 0; j < M; j++) {
+					if (map[i][j] == 2) {
+						virus++;
+						bfs(i, j);
+					}
+					if (map[i][j] == 1)
+						virus++;
+				}
+			}
+
+			init();
+
+			if (virus < MAX)
+				MAX = virus;
+
+			virus = 0;
+			return;
+		}
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				if (map[i][j] != 0)
+					continue;
+
+				map[i][j] = 1;
+				dfs(i, j, count + 1);
+				map[i][j] = 0;
+			}
+		}
+	}
+
+	private static boolean isRange(int x, int y) {
+		if (x >= 0 && x < N && y >= 0 && y < M)
+			return true;
+		return false;
+	}
+
+	private static void init() {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				visited[i][j] = false;
+			}
+		}
+	}
+}
+
+class Point {
+	int x;
+	int y;
+
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+}

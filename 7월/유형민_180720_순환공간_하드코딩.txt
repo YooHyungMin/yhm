@@ -1,0 +1,76 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+//작성자 : 유형민
+//제목 :	순환공간
+//수정일 : 2018. 7. 20
+//언어 : Java
+
+public class Main {
+	static int N, M; // 행, 열
+	static int r1, c1; // 출발
+	static int r2, c2; // 목적
+	static int result[];
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int testCase; // 테스트 케이스
+
+		testCase = sc.nextInt();
+		result = new int[testCase];
+		
+		for (int i = 0; i < testCase; i++) {
+			N = sc.nextInt();
+			M = sc.nextInt();
+
+			r1 = sc.nextInt();
+			c1 = sc.nextInt();
+			r2 = sc.nextInt();
+			c2 = sc.nextInt();
+
+			result[i] = solve();
+		}
+		
+		for(int i =0 ;i<result.length;i++) {
+			System.out.println("#"+(i+1)+" "+result[i]);
+		}
+	}
+
+	private static int solve() {
+		int dx = 0;
+		int dy = 0;
+
+		//r1 과 r2를 비교하여 큰쪽에서 빼준다.
+		if (r1 >= r2) {
+			if ((N - r1 + r2) >= r1 - r2) {
+				dx = r1 - r2;
+			} else {
+				dx = N - r1 + r2;
+			}
+		} else {
+			if ((N - r2 + r1) >= r2 - r1) {
+				dx = r2 - r1;
+			} else {
+				dx = N - r2 + r1;
+			}
+		}
+
+		//c1과 c2를 비교하여 큰쪽에서 빼준다.
+		if (c1 >= c2) {
+			if ((M - c1 + c2) >= c1 - c2) {
+				dy = c1 - c2;
+			} else {
+				dy = M - c1 + c2;
+			}
+		} else {
+			if (M - c2 + c1 >= c2 - c1) {
+				dy = c2 - c1;
+			} else {
+				dy = M - c2 + c1;
+			}
+		}
+		
+		return dx + dy;
+	}
+}

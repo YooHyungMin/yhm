@@ -1,0 +1,58 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Scanner;
+import java.util.Stack;
+
+//작성자 : 유형민
+//제목 :	일곱난쟁이
+//문제번호 : 2309	
+//수정일 : 2018. 7. 5
+//언어 : Java
+
+public class Main {
+	static Scanner sc = new Scanner(System.in);
+	static ArrayList<Integer> nine = new ArrayList<>(); // 아홉 난쟁이
+
+	public static void main(String[] args) {
+		Stack<Integer> seven = new Stack<>(); // 일곱 난쟁이
+
+		for (int i = 0; i < 9; i++) {
+			int j = sc.nextInt();
+			nine.add(j);
+		}
+
+		combination(seven, 9, 7, 0, 0);
+	}
+
+	// 조합을 통해 7명 난쟁이 뽑기
+	private static void combination(Stack<Integer> seven, int total, int pick, int index, int target) {
+		if (pick == 0) { // 다 뽑았을 경우
+			cal(seven);
+		} else if (target == total)
+			return;
+		else {
+			// 조합 알고리즘
+			seven.add(nine.get(index));
+			combination(seven, total, pick - 1, index + 1, target + 1);
+			seven.pop();
+			combination(seven, total, pick, index + 1, target + 1);
+		}
+	}
+
+	// 합 100이하이면 종료 하고 정렬하여 화면 출력
+	private static void cal(Stack<Integer> seven) {
+		int sum = 0;
+
+		for (int i = 0; i < 7; i++)
+			sum += seven.get(i);
+
+		if (sum == 100) { // 100이면 종료
+			Collections.sort(seven); // 오름차순 정렬
+
+			for (int i = 0; i < 7; i++)
+				System.out.println(seven.get(i));
+
+			return;
+		}
+	}
+}

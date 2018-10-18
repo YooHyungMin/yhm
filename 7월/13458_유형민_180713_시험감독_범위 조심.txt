@@ -1,0 +1,58 @@
+import java.util.Scanner;
+
+//작성자 : 유형민
+//제목 :	시험감독
+//문제번호 : 13458
+//수정일 : 2018. 7. 13
+//언어 : Java
+
+//구현 내용
+// 1. 응시실 갯수 room 응시생 entrant[] 총감독 gSupervisor 부감독 sSupervisor 입력
+// 2. count = 총감독로 초기설정
+// 3. 응시생수 - gSupervisor / 부감독 나머지가 있을 시 몫+1 없을 시 그 몫만
+
+public class Main {
+	static Scanner sc = new Scanner(System.in);
+	static int entrant[] = new int[1000001]; // 응시생
+	static long count = 0; // 최소 감독 수
+	static int room; // 응시실
+
+	public static void main(String[] args) {
+		int gSupervisor; // 총감독
+		int sSupervisor; // 부감독
+
+		room = sc.nextInt();
+
+		for (int i = 0; i < room; i++)
+			entrant[i] = sc.nextInt();
+
+		gSupervisor = sc.nextInt();
+		sSupervisor = sc.nextInt();
+
+		count = room;
+		solve(gSupervisor, sSupervisor);
+		System.out.println(count);
+	}
+
+	private static void solve(int gSupervisor, int sSupervisor) {
+		int tempEntrant = 0;
+		// (응시생 - 총감독) / 부감독 의 나머지가 0일 경우 몫값 카운트 아닐경우 몫 + 1하여 카운트
+		for (int i = 0; i < room; i++) {
+			tempEntrant = entrant[i] - gSupervisor;
+
+			// 총감독이 감독할 수 있는 인원이 응시생보다 적으면서
+			if (tempEntrant > 0) {
+				// 부감독이 감독할 수 있는 인원으로 나누어질 경우
+				if (tempEntrant % sSupervisor == 0) {
+					count += ((tempEntrant / sSupervisor));
+				}
+				// 부감독이 감독할 수 있는 인원으로 나누어지지 않을 경우
+				else {
+					count += ((tempEntrant / sSupervisor) + 1);
+				}
+			} else {
+				continue;
+			}
+		}
+	}
+}

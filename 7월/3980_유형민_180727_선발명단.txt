@@ -1,0 +1,57 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 선발 명단
+//번호 : 3980
+//수정일 : 2018. 7. 31
+//언어 : Java
+
+public class Main {
+	static int ability[][] = new int[11][11]; // 능력치 배열
+	static int max = 0;
+	static int visited = 0;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int testCase = Integer.parseInt(st.nextToken());
+
+		for (int i = 0; i < testCase; i++) {
+			for (int j = 0; j < 11; j++) {
+				st = new StringTokenizer(br.readLine());
+				for (int k = 0; k < 11; k++)
+					ability[j][k] = Integer.parseInt(st.nextToken());
+			}
+
+			for (int j = 0; j < 11; j++) {
+				if (ability[0][j] > 0) {
+					visited |= (1 << j);
+					solve(1, ability[0][j], j);
+					visited &= (0 << j);
+				}
+			}
+
+			System.out.println(max);
+			visited = 0;
+			max = 0;
+		}
+	}
+
+	// PLAYER와 NUM 값 비교를 변경하여야함
+	private static void solve(int num, int sum, int index) {
+		if (num == 11) {
+			System.out.println(sum);
+			if (max < sum)
+				max = sum;
+			return;
+		}
+
+		for (int i = 0; i < 11; i++) {
+			if(ability[num][i] <= 0) continue;
+			solve(num + 1, sum + ability[num][i], index);
+		}
+	}
+}

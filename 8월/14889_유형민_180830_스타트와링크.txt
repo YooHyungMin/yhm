@@ -1,0 +1,76 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 스타트와 링크
+//번호 : 14889
+//수정일 : 2018. 8. 30
+//언어 : Java
+
+public class Main {
+	static int score[][];
+	static boolean visited[];
+	static int N;
+	static int MIN = 991;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+
+		score = new int[N + 1][N + 1];
+		visited = new boolean[N + 1];
+
+		for (int i = 1; i <= N; i++) {
+			st = new StringTokenizer(br.readLine());
+			for (int j = 1; j <= N; j++) {
+				score[i][j] = Integer.parseInt(st.nextToken());
+			}
+		}
+
+		for (int i = 1; i <= N; i++) {
+			if (visited[i])
+				continue;
+
+			visited[i] = true;
+			divide(i, 1);
+			visited[i] = false;
+		}
+
+		System.out.println(MIN);
+	}
+
+	//N개중에서 N/2개를 뽑는다.
+	private static void divide(int x, int count) {
+		for (int i = x; i <= N; i++) {
+			if (count == N / 2) {
+				if (MIN > startAndLink())
+					MIN = startAndLink();
+				return;
+			}
+
+			if (!visited[i]) {
+				visited[i] = true;
+				divide(i, count + 1);
+				visited[i] = false;
+			}
+		}
+	}
+
+	//점수 계산
+	private static int startAndLink() {
+		int START = 0;
+		int LINK = 0;
+		for (int i = 1; i <= N; i++) {
+			for (int j = i + 1; j <= N; j++) {
+				if (!visited[i] && !visited[j])
+					LINK += (score[i][j] + score[j][i]);
+				if (visited[i] && visited[j])
+					START += (score[i][j] + score[j][i]);
+			}
+		}
+		return (START - LINK) > 0 ? (START - LINK) : (LINK - START);
+	}
+}

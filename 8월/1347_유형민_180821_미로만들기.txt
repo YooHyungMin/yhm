@@ -1,0 +1,90 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 미로 만들기
+//번호 : 1347
+//수정일 : 2018. 8. 21
+//언어 : Java
+
+public class Main {
+	static int N;
+	static char maze[][];
+	static int dirSize[] = { 0, 0, 0, 0 }; // 남 서 북 동
+	static int dir;
+	static int x, y;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		if (N == 0)
+			return;
+
+		maze = new char[N * 2 + 1][N * 2 + 1];
+		x = y = N;
+		dirSize[0] = dirSize[1] = dirSize[2] = dirSize[3] = N;
+		st = new StringTokenizer(br.readLine());
+		String input = st.nextToken();
+
+		maze[x][y] = '.';
+		for (int i = 0; i < input.length(); i++) {
+			if (input.charAt(i) == 'R') {
+				dir = (dir + 1) % 4;
+			} else if (input.charAt(i) == 'L') {
+				dir = (dir + 3) % 4;
+			} else if (input.charAt(i) == 'F') {
+				move();
+				range();
+			}
+		}
+
+		for (int i = dirSize[2]; i <= dirSize[0]; i++) {
+			for (int j = dirSize[1]; j <= dirSize[3]; j++) {
+				if (maze[i][j] == '\u0000')
+					maze[i][j] = '#';
+
+				bw.write(maze[i][j]);
+			}
+			bw.write('\n');
+		}
+
+		bw.flush();
+		bw.close();
+	}
+
+	private static void move() {
+		int dx[] = { 1, 0, -1, 0 };
+		int dy[] = { 0, -1, 0, 1 };
+
+		x = x + dx[dir];
+		y = y + dy[dir];
+		maze[x][y] = '.';
+	}
+	
+	private static void range() {
+		switch (dir) {
+		case 0:
+			if (dirSize[dir] < x)
+				dirSize[dir] = x;
+			break;
+		case 1:
+			if (dirSize[dir] > y)
+				dirSize[dir] = y;
+			break;
+		case 2:
+			if (dirSize[dir] > x)
+				dirSize[dir] = x;
+			break;
+		case 3:
+			if (dirSize[dir] < y)
+				dirSize[dir] = y;
+			break;
+		}		
+	}
+}

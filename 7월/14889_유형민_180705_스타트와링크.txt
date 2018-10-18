@@ -1,0 +1,87 @@
+import java.util.Scanner;
+
+//작성자 : 유형민
+//제목 :	스타트와링크
+//문제번호 : 14889	
+//수정일 : 2018. 7. 5
+//언어 : Java
+
+public class Main {
+	static Scanner sc = new Scanner(System.in);
+	static int ability[][]; // 능력치
+	static int comb[]; // 사람 수 뽑기 위한 배열
+	static int start[]; // 스타트팀
+	static int link[]; // 링크팀
+	static int num; // 사람 수 !무조건 짝수
+	static int min = 99999999; // 최솟값
+
+	public static void main(String[] args) {
+		num = sc.nextInt();
+
+		ability = new int[num][num]; // 능력치 배열
+		comb = new int[num]; // 사람 수 배열
+		start = new int[num / 2]; // start팀
+		link = new int[num / 2]; // link팀
+
+		for (int i = 0; i < num; i++) { // 능력치 입력 및 사람 수 초기화
+			for (int j = 0; j < num; j++) {
+				ability[i][j] = sc.nextInt();
+				comb[i] = i + 1;
+			}
+		}
+
+		search(start, num, num / 2, 0, 1);
+		System.out.println(min);
+	}
+
+	// 조합을 통해 num/2 갯수 뽑기
+	private static void search(int[] start, int totalCount, int num, int index, int target) {
+		// 모든 수를 다 뽑았으면 종료
+		if (num == 0) {
+			int count = 0;
+			// 링크팀 생성
+			for (int i = 0; i < totalCount; i++) {
+				for (int j = 0; j < totalCount / 2; j++) {
+					if (comb[i] == start[j]) {
+						comb[i] = 0;
+						break;
+					}
+				}
+				if (comb[i] != 0) {
+					link[count] = comb[i];
+					count++;
+				} else // 0으로 설정했던 것을 다시 복구
+					comb[i] = i + 1;
+			}
+
+			cal(start, link); // 최솟 값 계산
+		} else if (target == totalCount + 1) { // 수가 갯수+1 과 같아지면 종료
+			return;
+		} else {
+			// 조합 알고리즘 이해 해야함
+			start[index] = target;
+			search(start, totalCount, num - 1, index + 1, target + 1);
+			search(start, totalCount, num, index, target + 1);
+		}
+	}
+
+	// 차의 최솟값 구하기
+	private static void cal(int start[], int link[]) {
+		int sSum = 0; // start팀 합
+		int lSum = 0; // link팀 합
+
+		// start팀과 link팀 능력치 계산
+		for (int i = 0; i < num / 2; i++) {
+			for (int j = 0; j < num / 2; j++) {
+				if (i != j)
+					sSum += ability[start[i] - 1][start[j] - 1];
+				lSum += ability[link[i] - 1][link[j] - 1];
+			}
+		}
+
+		// 두 팀 능력치 합 차이 최솟값
+		if (Math.abs(sSum - lSum) < min) {
+			min = Math.abs(sSum - lSum);
+		}
+	}
+}

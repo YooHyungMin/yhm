@@ -1,0 +1,92 @@
+import java.util.Scanner;
+
+//작성자 : 유형민
+//제목 :	유기농 배추
+//문제번호 : 1012
+//수정일 : 2018. 7. 18
+//언어 : Java
+
+//구현 내용
+// 1. map[][] , visited[][] , 방향[] , count[] 입력
+// 2. dfs를 통해 방문 여부로 구현
+
+public class Main {
+	static Scanner sc = new Scanner(System.in);
+	static int map[][]; // 배추 밭
+	static boolean visited[][]; // 방문여부
+	static int count = 0;
+
+	public static void main(String[] args) {
+		int testCase;
+		int M, N, K; // 가로, 세로, 배추 심을 위치
+		int x, y; // 배추 위치
+
+		testCase = sc.nextInt();
+		for (int i = 0; i < testCase; i++) {
+			M = sc.nextInt();
+			N = sc.nextInt();
+			K = sc.nextInt();
+
+			map = new int[N][M];
+			visited = new boolean[N][M];
+
+			for (int j = 0; j < K; j++) {
+				x = sc.nextInt();
+				y = sc.nextInt();
+
+				map[y][x] = 1;
+			}
+
+			init(N, M);
+
+			for (int j = 0; j < map.length; j++) {
+				for (int k = 0; k < map[0].length; k++) {
+					// 방문 했거나 0인 경우
+					if (map[j][k] == 0 || visited[j][k])
+						continue;
+
+					dfs(j, k);
+					count++;
+				}
+			}
+
+			System.out.println(count);
+			count = 0;
+		}
+	}
+
+	private static void dfs(int i, int j) {
+		int dx[] = { 0, 0, -1, 1 };
+		int dy[] = { 1, -1, 0, 0 };
+
+		visited[i][j] = true;
+
+		for (int k = 0; k < 4; k++) {
+			int x = j + dx[k];
+			int y = i + dy[k];
+
+			// 범위 초과 시 종료
+			if (!isRange(x, y))
+				continue;
+
+			// 인접한 곳으로 이동 가능 여부 확인
+			if (map[y][x] == 1 && !visited[y][x]) {
+				dfs(y, x);
+			}
+		}
+	}
+
+	private static boolean isRange(int dx, int dy) {
+		if (dy >= 0 && dy < map.length && dx >= 0 && dx < map[0].length)
+			return true;
+		return false;
+	}
+
+	private static void init(int N, int M) {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				visited[i][j] = false;
+			}
+		}
+	}
+}

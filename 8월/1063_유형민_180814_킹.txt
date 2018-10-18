@@ -1,0 +1,136 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 킹
+//번호 : 1063번
+//수정일 : 2018. 8. 14
+//언어 : Java
+//필요 알고리즘 : 
+
+public class Main {
+	static Point king, stone;
+	static int dx[] = { 0, 0, 1, -1, -1, -1, 1, 1 };
+	static int dy[] = { 1, -1, 0, 0, 1, -1, 1, -1 };
+	static int movement;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		String inputKing = st.nextToken();
+		String inputStone = st.nextToken();
+		int N = Integer.parseInt(st.nextToken());
+
+		//문자열로 받은 왕과 돌의 좌표를 정수좌표로 변환
+		int king_x = (int) (inputKing.charAt(0) - 64);
+		int king_y = 9 - (int) (inputKing.charAt(1) - 48);
+		int stone_x = (int) (inputStone.charAt(0) - 64);
+		int stone_y = 9 - (int) (inputStone.charAt(1) - 48);
+
+		king = new Point(king_x, king_y);
+		stone = new Point(stone_x, stone_y);
+
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			String move = st.nextToken();
+
+			movementSelect(move);
+			result(movement);
+		}
+		
+		//정수로 바꿔준 부분 다시 문자열로 변환
+		String kingX = Character.toString((char)(king.getX()+64));
+		String kingY = Character.toString((char)(9 - king.getY() + 48));
+		String stoneX = Character.toString((char)(stone.getX()+64));
+		String stoneY =Character.toString((char)(9 - stone.getY() + 48));
+		System.out.println(kingX + kingY);
+		System.out.println(stoneX + stoneY);
+	}
+
+	private static void result(int m) {
+		//왕이 범위에 벗어날 경우
+		if (!isRange(king, m))
+			return;
+		
+		//왕 이동
+		king.setX(king.getX() + dy[m]);
+		king.setY(king.getY() + dx[m]);
+
+		//왕과 돌의 위치가 같을 시 왕이 이동한 방향으로 돌 한칸 이동 //범위 벗어날 경우 이동 X
+		if (king.getX() == stone.getX() && king.getY() == stone.getY()) {
+			if(!isRange(stone,m)) {
+				king.setX(king.getX() - dy[m]);
+				king.setY(king.getY() - dx[m]);
+				return;
+			}
+			
+			stone.setX(stone.getX() + dy[m]);
+			stone.setY(stone.getY() + dx[m]);
+		}
+	}
+
+	private static void movementSelect(String move) {
+		switch (move) {
+		case "R":
+			movement = 0;
+			break;
+		case "L":
+			movement = 1;
+			break;
+		case "B":
+			movement = 2;
+			break;
+		case "T":
+			movement = 3;
+			break;
+		case "RT":
+			movement = 4;
+			break;
+		case "LT":
+			movement = 5;
+			break;
+		case "RB":
+			movement = 6;
+			break;
+		case "LB":
+			movement = 7;
+			break;
+		}
+	}
+
+	//범위
+	private static boolean isRange(Point p, int m) {
+		if (p.getX() + dy[m] > 0 && p.getX() + dy[m] < 9 && p.getY() + dx[m] > 0 && p.getY() + dx[m] < 9)
+			return true;
+		return false;
+	}
+}
+
+class Point {
+	private int x;
+	private int y;
+
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
+	}
+}

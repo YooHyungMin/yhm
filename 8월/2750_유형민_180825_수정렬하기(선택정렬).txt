@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 정렬
+//번호 : 2750
+//수정일 : 2018. 8. 25
+//언어 : Java
+
+public class Main {
+	static int N;
+	static int num[];
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+
+		N = Integer.parseInt(st.nextToken());
+		num = new int[N];
+
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
+			num[i] = Integer.parseInt(st.nextToken());
+		}
+		selectionSort();
+
+		for (int i = 0; i < N; i++) {
+			char a = (char)((int)'0' + num[i]);
+			bw.write(a);
+			bw.write('\n');
+		}
+
+		bw.flush();
+		bw.close();
+	}
+
+	private static void selectionSort() {
+		for (int i = 0; i < N - 1; i++) {
+			int temp = i;
+			// 최솟값 찾기
+			for (int j = i + 1; j < N; j++) {
+				if (num[j] < num[i]) {
+					temp = j;
+				}
+			}
+
+			// 현재 위치와 교환
+			int temp2 = num[i];
+			num[i] = num[temp];
+			num[temp] = temp2;
+		}
+	}
+}

@@ -1,0 +1,65 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 나무 자르기
+//번호 : 2805
+//수정일 : 2018. 8. 3
+//언어 : Java
+//배운내용 : 이분 탐색 ( 탐색범위가 무수히 큰경우 사용 )
+public class Main {
+	static int A[];
+	static int mid = 0;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+
+		A = new int[N];
+
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < N; i++) {
+			A[i] = Integer.parseInt(st.nextToken());
+		}
+
+		solve(N, M);
+	}
+
+	private static void solve(int N, int M) {
+		int last = 0;
+		int first = 0;
+		long sum = 0;
+		int ans = 0;
+		
+		for (int i = 0; i < N; i++) {
+			if (last < A[i])
+				last = A[i];
+		}
+
+		while (first <= last) {
+			sum = 0;
+			mid = (first + last) / 2;
+			for (int j = 0; j < N; j++) {
+				if (A[j] - mid > 0)
+					sum += (A[j] - mid);
+			}
+
+			//크거나 같을 경우 답의 최솟값을 저장해주고 first 이동
+			if (sum >= M) {
+				if(ans < mid)
+					ans = mid;
+				first = mid + 1;
+			}
+
+			//작을 경우 last 이동
+			if (sum < M) {
+				last = mid - 1;
+			}
+		}
+		System.out.println(ans);
+	}
+}

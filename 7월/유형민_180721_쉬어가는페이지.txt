@@ -1,0 +1,60 @@
+import java.util.Scanner;
+
+//작성자 : 유형민
+//제목 :	쉬어가는페이지
+//수정일 : 2018. 7. 21
+//언어 : Java
+
+public class Main {
+	static int restPage[]; // 쉬어가는 페이지
+	static boolean visited[]; // 방문 변수
+	static int result[];
+	static int count = 0;
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int testCase; // 테스트 케이스
+		int N, S, J, K; // 전체페이지, 시작페이지, 건너뛰는 페이지 수, 쉬어가는 페이지 수
+
+		testCase = sc.nextInt();
+		result = new int[testCase];
+
+		for (int i = 0; i < testCase; i++) {
+			N = sc.nextInt();
+			S = sc.nextInt();
+			J = sc.nextInt();
+			K = sc.nextInt();
+
+			restPage = new int[K];
+			visited = new boolean[K];
+			for (int j = 0; j < K; j++) {
+				visited[j] = false;
+				restPage[j] = sc.nextInt();
+			}
+
+			solve(N, S, J, K);
+
+			for (int j = 0; j < visited.length; j++) {
+				visited[j] = false;
+			}
+			result[i] = count;
+			count = 0;
+		}
+
+		for (int i = 0; i < result.length; i++)
+			System.out.println("#" + (i + 1) + " " + result[i]);
+	}
+
+	private static void solve(int N, int S, int J, int K) {
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < K; j++) {
+				if (S == restPage[j] && !visited[j]) {
+					visited[j] = true;
+					count++;
+					break;
+				}
+			}
+			S = S + J + 1;
+		}
+	}
+}

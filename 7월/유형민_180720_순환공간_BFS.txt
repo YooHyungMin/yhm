@@ -1,0 +1,110 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+//작성자 : 유형민
+//제목 :	순환공간
+//수정일 : 2018. 7. 20
+//언어 : Java
+
+public class Main {
+	static int map[][];
+	static boolean visited[][];
+	static int N, M; // 행, 열
+	static int r1, c1; // 출발
+	static int r2, c2; // 목적
+	static int result[];
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int testCase; // 테스트 케이스
+
+		testCase = sc.nextInt();
+		result = new int[testCase];
+		for (int i = 0; i < testCase; i++) {
+			N = sc.nextInt();
+			M = sc.nextInt();
+
+			map = new int[N][M];
+			visited = new boolean[N][M];
+			init();
+			r1 = sc.nextInt();
+			c1 = sc.nextInt();
+			r2 = sc.nextInt();
+			c2 = sc.nextInt();
+
+			bfs(r1, c1);
+			result[i] = map[r2][c2];
+		}
+		for (int i = 0; i < result.length; i++)
+			System.out.println("#" + (i + 1) + " " + result[i]);
+		
+		map = null;
+		visited = null;
+		result = null;
+	}
+
+	private static void bfs(int x, int y) {
+		Queue<Point> q = new LinkedList<>();
+		Point p = new Point(x, y);
+
+		int dx[] = { -1, 1, 0, 0 };
+		int dy[] = { -0, 0, 1, -1 };
+
+		q.add(p);
+		while (!q.isEmpty()) {
+			for (int i = 0; i < 4; i++) {
+				x = p.x;
+				y = p.y;
+				int temp_x = x + dx[i];
+				int temp_y = y + dy[i];
+
+				// 순환 할 경우 바꿔줌
+				if (temp_x < 0)
+					temp_x = N - 1;
+				if (temp_x == N)
+					temp_x = 0;
+				if (temp_y < 0)
+					temp_y = M - 1;
+				if (temp_y == M)
+					temp_y = 0;
+
+				if (!visited[temp_x][temp_y]) {
+					visited[temp_x][temp_y] = true;
+					q.add(new Point(temp_x, temp_y));
+					map[temp_x][temp_y] = map[x][y] + 1;
+					System.out.println(temp_x + " " + temp_y);
+				}
+
+				// 목적지에 도착하면 종료
+				if (temp_x == r2 && temp_y == c2)
+					return;
+			}
+			p = q.poll();
+		}
+	}
+
+	private static void init() {
+		for (int i = 0; i < visited.length; i++) {
+			for (int j = 0; j < visited[0].length; j++) {
+				visited[i][j] = false;
+			}
+		}
+
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				map[i][j] = 0;
+			}
+		}
+	}
+}
+
+class Point {
+	int x;
+	int y;
+
+	public Point(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+}

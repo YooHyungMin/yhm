@@ -1,0 +1,53 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+//작성자 : 유형민
+//제목 : 수들의 합 2
+//번호 : 2003
+//수정일 : 2018. 8. 2
+//언어 : Java
+
+public class Main {
+	static int A[]; 
+	static int count = 0;
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+
+		A = new int[N];
+
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < N; i++) {
+			A[i] = Integer.parseInt(st.nextToken());
+		}
+
+		solve(N, M);
+		System.out.println(count);
+	}
+
+	private static void solve(int N, int M) {
+		int sum;
+		for (int i = 0; i < N; i++) {
+			sum = 0;
+			if(A[i] == M) {
+				count++;
+				continue;
+			}
+			
+			for (int j = i; j < N; j++) {
+				sum += A[j];
+				
+				if(sum == M) {
+					count++;
+					break;
+				}
+				if(sum > M) break;
+			}
+		}
+	}
+}
